@@ -1,135 +1,158 @@
-![CI](https://github.com/emiliomunozai/mountain_car/actions/workflows/ci.yml/badge.svg?branch=main)
+# MountainCar-v0 — Q-Learning tabular vs. Deep Q-Network (DQN)
 
-A hands-on repo for understanding how Reinforcement Learning works.
-Train, inspect, and visualise RL agents on [MountainCar-v0](https://gymnasium.farama.org/environments/classic_control/mountain_car/) (or any other Gymnasium environment).
+Maestría en Inteligencia Artificial — Simulación y Aprendizaje por Refuerzo
 
-**This repo is a set of exercises.** The CLI, training loops and persistence are
-written; the algorithms themselves are left as marked `EXERCISE` stubs for you
-to fill in. Start with **[EXERCISES.md](EXERCISES.md)**.
+Trabajo en equipo: implementación y comparación de dos enfoques de Aprendizaje
+por Refuerzo para resolver el entorno [`MountainCar-v0`](https://gymnasium.farama.org/environments/classic_control/mountain_car/)
+de Gymnasium — un agente de **Q-Learning tabular** (con discretización del
+espacio de estados) y un agente de **Deep Q-Network (DQN)**.
 
-## MountainCar-v0 environment
+Repositorio base del curso: [emiliomunozai/mountain_car](https://github.com/emiliomunozai/mountain_car)
 
-An under-powered car sits in a valley. Its engine is too weak to drive straight
-up the right-hand hill, so the only way out is to rock back and forth and build
-up momentum. The goal is to reach the flag at position `0.5`.
+## Equipo
 
-### State (observation) — 2 continuous values
-
-| Index | Variable | Description | Range |
-|:---:|---|---|---|
-| 0 | position | Position of the car along the x-axis | -1.2 to 0.6 |
-| 1 | velocity | Velocity of the car | -0.07 to 0.07 |
-
-### Actions — 3 discrete
-
-| Value | Action |
-|:---:|---|
-| 0 | Accelerate to the left |
-| 1 | Don't accelerate |
-| 2 | Accelerate to the right |
-
-### Rewards
-
-| Event | Reward |
+| Persona | Responsabilidad |
 |---|---|
-| Every step taken | **-1** |
-| Reaching the flag (position >= 0.5) | episode ends |
+| Persona 1 | Repositorio, entorno y README (coordinación) |
+| Persona 2 | Agente Q-Learning: código, entrenamiento y evidencia |
+| Persona 3 | Agente DQN: red neuronal y aprendizaje |
+| Persona 4 | Agente DQN: exploración y resultados |
+| Persona 5 | Esquemas propios (dibujos a mano) |
+| Persona 6 | Documentación y comparación final |
 
-The reward is `-1` per step and nothing else, so the total return is simply the
-negative of the episode length: **less negative is better**. Episodes are cut
-off after 200 steps, which gives a floor of `-200` for a policy that never
-reaches the flag. Anything around `-110` or better is considered solved.
+## Objetivo
 
-This flat reward is what makes MountainCar interesting: there is no gradient to
-follow toward the goal, so the agent has to stumble onto the flag by
-exploration before it can learn anything at all.
+Entender las diferencias entre los métodos tabulares clásicos y el Deep RL,
+analizando el proceso de entrenamiento, el desempeño obtenido y las
+limitaciones de cada aproximación, sobre el mismo entorno.
 
-## Install
+## Estructura del repositorio
 
-```bash
-uv sync
+```
+mountain_car/
+├── src/mountain_car/
+│   ├── cli.py
+│   └── agents/
+│       ├── qlearning.py   # Ejercicio 1: Q-Learning tabular
+│       └── dqn.py         # Ejercicios 2 y 3: DQN
+├── evidencias/
+│   ├── qlearning/         # Curva/score del mejor resultado de Q-Learning
+│   ├── dqn/                # Curva/score del mejor resultado de DQN
+│   └── esquemas/           # Dibujos propios: ciclo de Q-Learning y de DQN
+├── saves/                  # Agentes entrenados guardados
+├── EXERCISES.md            # Enunciado original de los ejercicios (curso)
+└── pyproject.toml
 ```
 
-## Usage
+## Instalación y ejecución
 
-All commands are exposed through the `mountaincar` CLI:
+El proyecto usa [`uv`](https://docs.astral.sh/uv/) para manejar el entorno y las dependencias.
 
 ```bash
-uv run mountaincar <command>
+uv sync                                   # instala el entorno y las dependencias
+uv run mountaincar inspect --steps 3      # inspecciona el entorno
 ```
 
-| Command | What it does |
-|---|---|
-| `version` | Show the package version |
-| `list` | List the agents and whether each has a save file |
-| `inspect` | Print the state/action spaces and some random transitions |
-| `init <agent>` | Create a new, untrained agent and save it |
-| `train <agent>` | Train an agent (resumes from its save if one exists) |
-| `load <agent>` | Print a saved agent's info, optionally evaluate it |
-| `sim <agent>` | Play episodes with a trained agent, printed step by step |
-| `render <agent>` | Play episodes in a graphical window |
-| `delete <agent>` | Delete an agent's save file |
-
-`<agent>` is either `qlearning` or `dqn`.
-
-### Example session
+Comandos principales:
 
 ```bash
-# See what the environment looks like
-uv run mountaincar inspect --steps 3
-
-# Train the tabular agent
+# Q-Learning
 uv run mountaincar train qlearning --episodes 10000
-
-# How did it do?
 uv run mountaincar load qlearning --eval
-
-# Watch it drive
 uv run mountaincar render qlearning --episodes 3
+
+# DQN
+uv run mountaincar train dqn --episodes 1000
+uv run mountaincar load dqn --eval
+uv run mountaincar render dqn --episodes 3
 ```
 
-## Agents
+Otros comandos útiles: `list`, `init <agente>`, `sim <agente>`, `delete <agente>`.
 
-Both agents live in `src/mountain_car/agents/` and are written from scratch
-(no Stable-Baselines3 or similar), so every part of the algorithm is visible --
-and, in this repo, **partly left for you to write**. See [EXERCISES.md](EXERCISES.md).
+## 1. Agente Q-Learning tabular
 
-### `qlearning` — tabular Q-Learning
+*(Persona 2 completa esta sección)*
 
-The observation is only 2-dimensional and the environment publishes hard bounds
-for both dimensions, so the state space is discretised into an
-`n_bins x n_bins` grid (400 states by default) and stored in a plain Q-table.
+**Discretización:** `n_bins = 20` por dimensión (posición, velocidad) → 400 estados posibles.
 
-Defaults: `n_bins=20`, `lr=0.1`, `gamma=0.99`, epsilon `1.0 -> 0.01` decaying by
-`0.9995` per episode. A correct implementation scores about `-133` and reaches
-the flag in 100/100 episodes, after roughly 20k episodes (~4 min).
+**Hiperparámetros:**
 
-### `dqn` — Deep Q-Network
+| Hiperparámetro | Valor |
+|---|---|
+| `n_bins` | 20 |
+| `lr` (α) | _pendiente_ |
+| `gamma` (γ) | _pendiente_ |
+| `epsilon_start` | _pendiente_ |
+| `epsilon_end` | _pendiente_ |
+| `epsilon_decay` | _pendiente_ |
+| Episodios de entrenamiento | _pendiente_ |
 
-A small MLP on the raw 2-D observation, trained with experience replay and a
-target network. A correct implementation scores about `-106` and reaches the
-flag in 100/100 episodes, after roughly 2500 episodes (~5 min on CPU) -- better
-than the tabular agent, and past the conventional "solved" threshold of `-110`.
+**Resultado del mejor agente:** _pendiente_ (score de evaluación, episodios exitosos de 10)
 
-Getting there takes more than transcribing the DQN pseudocode. MountainCar has
-a reward structure that defeats the textbook version of the algorithm, and
-Exercise 3 is about finding out how and why. That exercise ships with a ladder
-of progressive clues, so it is a guided investigation rather than a wall.
+**Evidencia:** ver [`evidencias/qlearning/`](evidencias/qlearning/)
 
-> A note on hardware: none of this needs a GPU. The network is tiny and the
-> batches are small, so a gradient step costs about 0.5 ms on CPU and the
-> bottleneck is stepping the environment, not matrix multiplication. On a GPU
-> this would most likely be *slower*, because per-kernel launch overhead would
-> dominate work this small.
+**Comentario:** _pendiente — breve análisis del comportamiento aprendido_
 
-## Project layout
+## 2. Agente Deep Q-Network (DQN)
 
-```
-src/mountain_car/
-├── cli.py              # argparse CLI, one command per function
-└── agents/
-    ├── qlearning.py    # tabular Q-Learning
-    └── dqn.py          # DQN: QNetwork, ReplayBuffer, DQNAgent
-saves/                  # agent save files land here
-EXERCISES.md            # the exercises: what to implement, in what order
-```
+*(Personas 3 y 4 completan esta sección)*
+
+**Arquitectura de la red:** MLP `state_dim → hidden → hidden → action_dim`
+
+**Componentes:** replay buffer, target network, exploración con acciones
+temporalmente correlacionadas (necesaria para que el agente logre secuencias
+sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 3).
+
+**Hiperparámetros:**
+
+| Hiperparámetro | Valor |
+|---|---|
+| Tamaño de capas ocultas | _pendiente_ |
+| Learning rate | _pendiente_ |
+| `gamma` (γ) | _pendiente_ |
+| Tamaño del replay buffer | _pendiente_ |
+| Tamaño de batch | _pendiente_ |
+| Frecuencia de actualización de target network | _pendiente_ |
+| Hiperparámetros de exploración correlacionada | _pendiente_ |
+| Episodios de entrenamiento | _pendiente_ |
+
+**Resultado del mejor agente:** _pendiente_ (score de evaluación, episodios exitosos de 10)
+
+**Evidencia:** ver [`evidencias/dqn/`](evidencias/dqn/)
+
+**Comentario:** _pendiente — breve análisis del comportamiento aprendido_
+
+## 3. Esquemas del proceso de entrenamiento
+
+*(Persona 5 completa esta sección — dibujos propios, no generados por IA)*
+
+### Q-Learning
+
+![Esquema Q-Learning](evidencias/esquemas/qlearning.jpg)
+*(reemplazar por la imagen escaneada)*
+
+### DQN
+
+![Esquema DQN](evidencias/esquemas/dqn.jpg)
+*(reemplazar por la imagen escaneada)*
+
+## 4. Comparación entre Q-Learning y DQN
+
+*(Persona 6 completa esta sección)*
+
+| Aspecto | Q-Learning tabular | DQN |
+|---|---|---|
+| Estabilidad del entrenamiento | _pendiente_ | _pendiente_ |
+| Velocidad de aprendizaje | _pendiente_ | _pendiente_ |
+| Desempeño final | _pendiente_ | _pendiente_ |
+| Ventajas | _pendiente_ | _pendiente_ |
+| Limitaciones | _pendiente_ | _pendiente_ |
+| Dificultad de implementación | _pendiente_ | _pendiente_ |
+
+_pendiente — análisis escrito, apoyado en los números reales de cada agente._
+
+## Referencias
+
+- Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction* (2.ª ed., caps. 4–6). MIT Press.
+- Documentación de [Gymnasium — MountainCar-v0](https://gymnasium.farama.org/environments/classic_control/mountain_car/).
+- Lapan, M. (2020). *Deep Reinforcement Learning Hands-On* (2.ª ed.). Packt.
