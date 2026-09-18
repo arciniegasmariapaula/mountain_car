@@ -13,12 +13,12 @@ Repositorio base del curso: [emiliomunozai/mountain_car](https://github.com/emil
 
 | Persona | Responsabilidad |
 |---|---|
-| Persona 1- Maria Paula Arciniegas | Repositorio, entorno y README (coordinación) |
-| Persona 2- Camilo Briceño | Agente Q-Learning: código, entrenamiento y evidencia |
-| Persona 3- Sabrina Miranda| Agente DQN: red neuronal y aprendizaje |
-| Persona 4 | Agente DQN: exploración y resultados |
-| Persona 5- Camilo Rojas| Esquemas propios (dibujos a mano) |
-| Persona 6 | Documentación y comparación final |
+| Persona 1- Maria Paula Arciniegas Longas | Repositorio, entorno y README (coordinación) |
+| Persona 2- Camilo Andres Briceno Leon | Agente Q-Learning: código, entrenamiento y evidencia |
+| Persona 3- Sabrina Anais Miranda Franco| Agente DQN: red neuronal y aprendizaje |
+| Persona 4- Carlos Eduardo Caicedo Hortua| Agente DQN: exploración y resultados |
+| Persona 5- Cesar Camilo Rojas Sarmiento| Esquemas propios (dibujos a mano) |
+| Persona 6-Cesar Hernan Garcia Afanador | Documentación y comparación final |
 
 ## Objetivo
 
