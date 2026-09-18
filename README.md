@@ -13,9 +13,9 @@ Repositorio base del curso: [emiliomunozai/mountain_car](https://github.com/emil
 
 | Persona | Responsabilidad |
 |---|---|
-| Persona 1 | Repositorio, entorno y README (coordinación) |
-| Persona 2 | Agente Q-Learning: código, entrenamiento y evidencia |
-| Persona 3 | Agente DQN: red neuronal y aprendizaje |
+| Persona 1- Maria Paula Arciniegas | Repositorio, entorno y README (coordinación) |
+| Persona 2- Camilo Briceño | Agente Q-Learning: código, entrenamiento y evidencia |
+| Persona 3- Sabrina Miranda| Agente DQN: red neuronal y aprendizaje |
 | Persona 4 | Agente DQN: exploración y resultados |
 | Persona 5 | Esquemas propios (dibujos a mano) |
 | Persona 6 | Documentación y comparación final |
@@ -156,3 +156,5 @@ _pendiente — análisis escrito, apoyado en los números reales de cada agente.
 - Sutton, R. S., & Barto, A. G. (2018). *Reinforcement Learning: An Introduction* (2.ª ed., caps. 4–6). MIT Press.
 - Documentación de [Gymnasium — MountainCar-v0](https://gymnasium.farama.org/environments/classic_control/mountain_car/).
 - Lapan, M. (2020). *Deep Reinforcement Learning Hands-On* (2.ª ed.). Packt.
+git config --global user.name "Maria Paula Arciniegas"
+git config --global user.email "arciniegasmariapaula@gmail.com"
