@@ -17,7 +17,7 @@ Repositorio base del curso: [emiliomunozai/mountain_car](https://github.com/emil
 | Persona 2- Camilo Briceño | Agente Q-Learning: código, entrenamiento y evidencia |
 | Persona 3- Sabrina Miranda| Agente DQN: red neuronal y aprendizaje |
 | Persona 4 | Agente DQN: exploración y resultados |
-| Persona 5 | Esquemas propios (dibujos a mano) |
+| Persona 5- Camilo Rojas| Esquemas propios (dibujos a mano) |
 | Persona 6 | Documentación y comparación final |
 
 ## Objetivo
