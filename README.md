@@ -107,14 +107,16 @@ sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 
 
 | Hiperparámetro | Valor |
 |---|---|
-| Tamaño de capas ocultas | _pendiente_ |
-| Learning rate | _pendiente_ |
-| `gamma` (γ) | _pendiente_ |
-| Tamaño del replay buffer | _pendiente_ |
-| Tamaño de batch | _pendiente_ |
-| Frecuencia de actualización de target network | _pendiente_ |
-| Hiperparámetros de exploración correlacionada | _pendiente_ |
-| Episodios de entrenamiento | _pendiente_ |
+| Tamaño de capas ocultas | 2 capas de 128 neuronas, activación ReLU |
+| Learning rate | 0.001 (optimizador Adam) |
+| `gamma` (γ) | 0.99 |
+| Tamaño del replay buffer | 100.000 transiciones |
+| Tamaño de batch | 64 |
+| Frecuencia de actualización de target network | cada 10 episodios |
+| Epsilon | de 1.0 a 0.01, decaimiento de 0.995 por episodio |
+| Función de pérdida | MSE (error cuadrático medio) |
+| Hiperparámetros de exploración correlacionada | _pendiente (Persona 4)_ |
+| Episodios de entrenamiento | _pendiente (Persona 4)_ |
 
 **Resultado del mejor agente:** _pendiente_ (score de evaluación, episodios exitosos de 10)
 
