@@ -89,6 +89,23 @@ Otros comandos útiles: `list`, `init <agente>`, `sim <agente>`, `delete <agente
 
 **Resultado del mejor agente:** _pendiente_ (score de evaluación, episodios exitosos de 10)
 
+
+**Verificación de la red y del aprendizaje (Ejercicio 2):**
+
+| Prueba | Resultado |
+|---|---|
+| CartPole-v1 (200 episodios) | recompensa promedio de 20.68 (episodios 1-25) a 178.56 (episodios 176-200) |
+| MountainCar-v0 (1000 episodios, exploración epsilon-greedy normal) | -200 en todos los episodios, 0 de 1000 llegaron a la bandera |
+| Promedio de los valores Q en MountainCar | -63.53 |
+| Diferencia promedio entre la mejor y la peor acción | 0.008 |
+
+![DQN en CartPole](evidencias/dqn/dqn_cartpole_verificacion.png)
+
+![DQN en MountainCar sin arreglo de exploración](evidencias/dqn/dqn_mountaincar_1000_episodios.png)
+
+**Comentario:** En MountainCar el agente no aprendió. En los 1000 episodios nunca llegó a la bandera. Por eso solo recibió -1 en cada paso y nunca vio una recompensa diferente. La red le da casi el mismo valor Q en las tres acciones (la diferencia es de solo 0.008). Es decir, para la red da igual ir a la izquierda, a la derecha o no hacer nada ya que como nunca llegó a la meta, nada de lo que hizo le dio un mejor resultado. Para subir la montaña, el carro tiene que empujar muchas veces seguidas hacia el mismo lado. Pero al explorar, el agente elige una acción al azar en cada paso, así que casi nunca repite la misma varias veces. Esto se corrige en el Ejercicio 3.
+
+
 **Evidencia:** ver [`evidencias/qlearning/`](evidencias/qlearning/)
 
 **Comentario:** _pendiente — breve análisis del comportamiento aprendido_
