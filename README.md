@@ -99,9 +99,11 @@ Otros comandos útiles: `list`, `init <agente>`, `sim <agente>`, `delete <agente
 | Promedio de los valores Q en MountainCar | -63.53 |
 | Diferencia promedio entre la mejor y la peor acción | 0.008 |
 
-![DQN en CartPole](evidencias/dqn/dqn_cartpole_verificacion.png)
 
-![DQN en MountainCar sin arreglo de exploración](evidencias/dqn/dqn_mountaincar_1000_episodios.png)
+<img width="592" height="289" alt="image" src="https://github.com/user-attachments/assets/75ac7b7f-e8b7-47f8-8040-6e0601e11bd0" />
+
+<img width="595" height="284" alt="image" src="https://github.com/user-attachments/assets/abd7b4c3-72a4-4b34-b639-532b4c5f106e" />
+
 
 **Comentario:** En MountainCar el agente no aprendió. En los 1000 episodios nunca llegó a la bandera. Por eso solo recibió -1 en cada paso y nunca vio una recompensa diferente. La red le da casi el mismo valor Q en las tres acciones (la diferencia es de solo 0.008). Es decir, para la red da igual ir a la izquierda, a la derecha o no hacer nada ya que como nunca llegó a la meta, nada de lo que hizo le dio un mejor resultado. Para subir la montaña, el carro tiene que empujar muchas veces seguidas hacia el mismo lado. Pero al explorar, el agente elige una acción al azar en cada paso, así que casi nunca repite la misma varias veces. Esto se corrige en el Ejercicio 3.
 
