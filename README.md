@@ -118,11 +118,11 @@ sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 
 | Hiperparámetros de exploración correlacionada | _pendiente (Persona 4)_ |
 | Episodios de entrenamiento | _pendiente (Persona 4)_ |
 
-**Resultado del mejor agente:** _pendiente_ (score de evaluación, episodios exitosos de 10)
+**Resultado del mejor agente:** _pendiente (Persona 4: DQN con exploración correlacionada, score de evaluación y episodios exitosos de 10)_
 
 **Evidencia:** ver [`evidencias/dqn/`](evidencias/dqn/)
 
-**Comentario:** _pendiente — breve análisis del comportamiento aprendido_
+**Comentario:** _pendiente (Persona 4) — breve análisis del comportamiento aprendido_
 
 ## 3. Esquemas del proceso de entrenamiento
 
