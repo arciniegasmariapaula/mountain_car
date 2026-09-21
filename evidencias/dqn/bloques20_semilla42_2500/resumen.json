@@ -1,0 +1,13 @@
+{
+  "recompensa_media": -102.23,
+  "desviacion_estandar": 12.593534055220559,
+  "exitos": 100,
+  "episodios_evaluados": 100,
+  "epsilon_final_entrenamiento": 0.01,
+  "exploracion_en_evaluacion": false,
+  "modelo_evaluado": "dqn_mejor.pt",
+  "episodios_del_modelo_evaluado": 1750,
+  "recompensa_validacion_del_modelo": -99.35,
+  "segundos_totales": 2330.12,
+  "curva_generada": true
+}

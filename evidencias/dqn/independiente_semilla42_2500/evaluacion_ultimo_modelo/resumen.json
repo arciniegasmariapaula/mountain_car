@@ -1,0 +1,12 @@
+{
+  "archivo_modelo": "evidencias/dqn/independiente_semilla42_2500/dqn_final.pt",
+  "sha256_modelo": "3d107628861828e7a8bc35c4f1b4c1b80c1b31302d44f4cf70475956f73338bb",
+  "episodios_entrenados": 2500,
+  "pasos_exploracion_entrenamiento": 1,
+  "episodios_evaluados": 100,
+  "semilla_inicial": 100042,
+  "recompensa_media": -200.0,
+  "desviacion_estandar": 0.0,
+  "exitos": 0,
+  "exploracion_en_evaluacion": false
+}

@@ -1,0 +1,12 @@
+{
+  "archivo_modelo": "evidencias/dqn/bloques20_semilla42_2500/dqn_final.pt",
+  "sha256_modelo": "b5ac11338d4b7eced2962324bff46171041858b291f3518b16cd9a033510a318",
+  "episodios_entrenados": 2500,
+  "pasos_exploracion_entrenamiento": 20,
+  "episodios_evaluados": 100,
+  "semilla_inicial": 100042,
+  "recompensa_media": -139.32,
+  "desviacion_estandar": 50.96074567743294,
+  "exitos": 59,
+  "exploracion_en_evaluacion": false
+}

@@ -1,0 +1,9 @@
+{
+  "modelo": "evidencias/dqn/bloques20_semilla42_2500/dqn_mejor.pt",
+  "semilla": 100042,
+  "pasos": 108,
+  "recompensa": -108.0,
+  "llego_a_la_bandera": true,
+  "exploracion": false,
+  "nota": "Grabación de un episodio; el desempeño general se informa en la evaluación completa."
+}
