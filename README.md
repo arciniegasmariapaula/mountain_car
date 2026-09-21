@@ -114,8 +114,6 @@ Otros comandos útiles: `list`, `init <agente>`, `sim <agente>`, `delete <agente
 
 ## 2. Agente Deep Q-Network (DQN)
 
-*(Personas 3 y 4 completan esta sección)*
-
 **Arquitectura de la red:** MLP `state_dim → hidden → hidden → action_dim`
 
 **Componentes:** replay buffer, target network, exploración con acciones
@@ -125,7 +123,7 @@ sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 
 **Hiperparámetros:**
 
 | Hiperparámetro | Valor |
-|---|---|
+| --- | --- |
 | Tamaño de capas ocultas | 2 capas de 128 neuronas, activación ReLU |
 | Learning rate | 0.001 (optimizador Adam) |
 | `gamma` (γ) | 0.99 |
@@ -134,14 +132,22 @@ sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 
 | Frecuencia de actualización de target network | cada 10 episodios |
 | Epsilon | de 1.0 a 0.01, decaimiento de 0.995 por episodio |
 | Función de pérdida | MSE (error cuadrático medio) |
-| Hiperparámetros de exploración correlacionada | _pendiente (Persona 4)_ |
-| Episodios de entrenamiento | _pendiente (Persona 4)_ |
+| Hiperparámetros de exploración correlacionada | `pasos_exploracion = 20`: repetir la misma acción exploratoria durante 20 pasos; referencia con `pasos_exploracion = 1` |
+| Episodios de entrenamiento | 2.500 por configuración, con semilla 42 |
 
-**Resultado del mejor agente:** _pendiente (Persona 4: DQN con exploración correlacionada, score de evaluación y episodios exitosos de 10)_
+**Resultado del mejor agente:** DQN con exploración correlacionada, seleccionado mediante validación en el episodio 1.750 de un entrenamiento completo de 2.500 episodios. Obtuvo un score medio de **−99,00** y **10/10 episodios exitosos** en las primeras diez evaluaciones. Estas forman parte de una evaluación de 100 episodios, cuyo resultado completo fue **−102,23 ± 12,59** (media ± desviación estándar) y **100/100 episodios exitosos**, sin exploración.
 
-**Evidencia:** ver [`evidencias/dqn/`](evidencias/dqn/)
+**Evidencia:** ver [evidencias/dqn/](evidencias/dqn/).
 
-**Comentario:** _pendiente (Persona 4) — breve análisis del comportamiento aprendido_
+- [Informe completo](docs/Resultados_agente-dqn-exploracion-resultados.md).
+- [Curvas de entrenamiento y validación](evidencias/dqn/comparacion_persona4/comparacion_aprendizaje.png).
+- [Comparación de las cien evaluaciones](evidencias/dqn/comparacion_persona4/comparacion_evaluacion.png).
+- [Resultados del agente con bloques](evidencias/dqn/bloques20_semilla42_2500/resultado.txt).
+- [Registro y modelos del agente con bloques](evidencias/dqn/bloques20_semilla42_2500/).
+- [Registro y modelos de la referencia](evidencias/dqn/independiente_semilla42_2500/).
+- [Grabación de un episodio real](evidencias/dqn/demostracion_persona4/episodio.gif).
+
+**Comentario:** Mantener una acción exploratoria durante 20 pasos facilitó secuencias sostenidas de empuje durante el entrenamiento. El agente logró llegar a la meta en todos los episodios evaluados, mientras que la referencia con exploración independiente obtuvo −200,00 y 0/100 llegadas. El parámetro `pasos_exploracion` se añadió a `_HPARAMS` para guardarlo y cargarlo con el modelo, y el estado de exploración se reinicia al comenzar cada episodio en `train()`. La repetición se aplica en `select_action` durante la exploración; la evaluación utiliza las decisiones de la red sin repetición forzada. Los resultados corresponden a una semilla de entrenamiento por configuración.
 
 ## 3. Esquemas del proceso de entrenamiento
 

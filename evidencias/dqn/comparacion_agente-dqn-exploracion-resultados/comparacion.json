@@ -1,0 +1,34 @@
+[
+  {
+    "configuracion": "Exploración independiente",
+    "episodios_entrenados": 2500,
+    "episodio_modelo_seleccionado": 250,
+    "validacion_media": -200.0,
+    "evaluacion_media": -200.0,
+    "evaluacion_desviacion": 0.0,
+    "exitos_evaluacion": 0,
+    "episodios_evaluados": 100,
+    "mejor_episodio_evaluacion": -200.0,
+    "peor_episodio_evaluacion": -200.0,
+    "media_primeras_10_evaluaciones": -200.0,
+    "exitos_primeras_10_evaluaciones": 0,
+    "minutos_ejecucion": 49.68,
+    "carpeta": "independiente_semilla42_2500"
+  },
+  {
+    "configuracion": "Bloques de 20 pasos",
+    "episodios_entrenados": 2500,
+    "episodio_modelo_seleccionado": 1750,
+    "validacion_media": -99.35,
+    "evaluacion_media": -102.23,
+    "evaluacion_desviacion": 12.593534055220559,
+    "exitos_evaluacion": 100,
+    "episodios_evaluados": 100,
+    "mejor_episodio_evaluacion": -86.0,
+    "peor_episodio_evaluacion": -191.0,
+    "media_primeras_10_evaluaciones": -99.0,
+    "exitos_primeras_10_evaluaciones": 10,
+    "minutos_ejecucion": 38.84,
+    "carpeta": "bloques20_semilla42_2500"
+  }
+]

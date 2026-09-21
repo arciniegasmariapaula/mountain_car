@@ -1,0 +1,32 @@
+{
+  "inicio": "2026-09-20T17:48:59.678773-05:00",
+  "episodios_solicitados": 2500,
+  "episodios_evaluacion": 100,
+  "semilla_entrenamiento": 42,
+  "semilla_evaluacion": 100042,
+  "semilla_validacion": 200042,
+  "episodios_validacion": 20,
+  "intervalo_validacion": 250,
+  "epsilon_inicial": 1.0,
+  "hiperparametros": {
+    "env_id": "MountainCar-v0",
+    "lr": 0.001,
+    "gamma": 0.99,
+    "epsilon_end": 0.01,
+    "epsilon_decay": 0.995,
+    "batch_size": 64,
+    "buffer_capacity": 100000,
+    "target_update_freq": 10,
+    "hidden": 128,
+    "pasos_exploracion": 20
+  },
+  "versiones": {
+    "python": "3.11.16",
+    "torch": "2.13.0+cpu",
+    "gymnasium": "1.3.0",
+    "numpy": "2.4.6"
+  },
+  "dispositivo": "cpu",
+  "hilos_torch": 1,
+  "sha256_codigo_dqn": "cd1f726ceb4cd330562e91a9e5cb62039526709250f7497232eabd8758e94cf8"
+}

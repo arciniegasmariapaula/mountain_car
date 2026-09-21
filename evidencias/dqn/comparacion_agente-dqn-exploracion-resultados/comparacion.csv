@@ -1,0 +1,3 @@
+configuracion,episodios_entrenados,episodio_modelo_seleccionado,validacion_media,evaluacion_media,evaluacion_desviacion,exitos_evaluacion,episodios_evaluados,mejor_episodio_evaluacion,peor_episodio_evaluacion,media_primeras_10_evaluaciones,exitos_primeras_10_evaluaciones,minutos_ejecucion,carpeta
+Exploración independiente,2500,250,-200.0,-200.0,0.0,0,100,-200.0,-200.0,-200.0,0,49.68,independiente_semilla42_2500
+Bloques de 20 pasos,2500,1750,-99.35,-102.23,12.593534055220559,100,100,-86.0,-191.0,-99.0,10,38.84,bloques20_semilla42_2500

@@ -1,0 +1,26 @@
+{
+  "comprobaciones": [
+    {
+      "experimento": "independiente_semilla42_2500",
+      "entrenamiento": 2500,
+      "validaciones": 10,
+      "evaluaciones_modelo_elegido": 100,
+      "evaluaciones_ultimo_modelo": 100,
+      "consistencia": "correcta"
+    },
+    {
+      "experimento": "bloques20_semilla42_2500",
+      "entrenamiento": 2500,
+      "validaciones": 10,
+      "evaluaciones_modelo_elegido": 100,
+      "evaluaciones_ultimo_modelo": 100,
+      "consistencia": "correcta"
+    }
+  ],
+  "unica_diferencia_hiperparametros": [
+    "pasos_exploracion"
+  ],
+  "sha256_codigo_dqn": "cd1f726ceb4cd330562e91a9e5cb62039526709250f7497232eabd8758e94cf8",
+  "copia_modelo_entrega": "idéntica al modelo seleccionado",
+  "animacion": "coincide con el primer episodio de evaluación"
+}

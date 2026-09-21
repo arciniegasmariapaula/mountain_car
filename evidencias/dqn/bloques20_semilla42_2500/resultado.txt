@@ -1,0 +1,9 @@
+Episodios de entrenamiento: 2500
+Pasos por bloque exploratorio: 20
+Semilla del experimento: 42
+Evaluación sin exploración: 100 episodios
+Recompensa media: -102.23
+Desviación estándar: 12.59
+Llegadas a la bandera: 100/100
+Modelo seleccionado en validación: episodio 1750
+La evaluación final utiliza semillas distintas de la validación.

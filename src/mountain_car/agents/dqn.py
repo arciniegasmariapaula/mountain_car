@@ -1,14 +1,13 @@
-"""
-Deep Q-Network (DQN) implementation in PyTorch.
+"""Agente DQN para aprender a controlar el carrito de MountainCar.
 
-This module intentionally avoids high-level RL libraries so every piece of
-the algorithm is visible and editable for learning purposes.
+La red estima el valor de cada acción. Las experiencias se guardan en una
+memoria y se reutilizan para entrenar. Una segunda red calcula los objetivos
+de aprendizaje y recibe una copia de los pesos cada cierto número de episodios.
 
-Key components:
-  - QNetwork     : a small fully-connected network that maps state -> Q(s,a)
-  - ReplayBuffer : stores (s, a, r, s', terminated) transitions for replay
-  - DQNAgent     : the training loop, epsilon-greedy policy, target-net sync
+Se conservan los nombres públicos del proyecto y las claves de los modelos
+guardados para mantener la compatibilidad con los demás archivos.
 """
+
 import random
 from collections import deque
 from pathlib import Path
@@ -19,39 +18,30 @@ import numpy as np
 import torch
 from torch import nn, optim
 
-# ── Neural network ────────────────────────────────────────────────────
-
 
 class QNetwork(nn.Module):
-    """EXERCISE 2a: the network that maps a state to one Q-value per action.
+    """Red con dos capas ocultas que devuelve un valor Q por acción.
 
-    Build a small fully-connected net:
-
-        state_dim -> hidden -> hidden -> action_dim
-
-    with a ReLU after each hidden layer. There is NO activation on the output
-    layer: these are Q-values (here they are all negative), not probabilities.
+    La salida no lleva una activación: los valores Q pueden ser negativos
+    y no representan probabilidades.
     """
 
     def __init__(self, state_dim: int, action_dim: int, hidden: int = 128) -> None:
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(state_dim, hidden),  
+            nn.Linear(state_dim, hidden),
             nn.ReLU(),
-            nn.Linear(hidden, hidden),  
+            nn.Linear(hidden, hidden),
             nn.ReLU(),
-            nn.Linear(hidden, action_dim), 
+            nn.Linear(hidden, action_dim),
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.layers(x)
 
 
-# ── Replay buffer ────────────────────────────────────────────────────
-
-
 class ReplayBuffer:
-    """Fixed-size FIFO buffer that stores transitions for experience replay."""
+    """Memoria de experiencias; al llenarse, descarta las más antiguas."""
 
     def __init__(self, capacity: int = 100_000) -> None:
         self.buffer: deque[tuple] = deque(maxlen=capacity)
@@ -73,15 +63,11 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-# ── Agent ─────────────────────────────────────────────────────────────
-
-
 class DQNAgent:
-    """
-    Deep Q-Network agent implemented from scratch.
+    """DQN con exploración mediante bloques de acciones repetidas.
 
-    Hyperparameters are intentionally exposed as constructor args so you
-    can experiment with them directly.
+    pasos_exploracion indica cuántos pasos dura una acción exploratoria.
+    Con 1 se recupera la exploración independiente del código original.
     """
 
     def __init__(
@@ -97,7 +83,15 @@ class DQNAgent:
         buffer_capacity: int = 100_000,
         target_update_freq: int = 10,
         hidden: int = 128,
+        pasos_exploracion: int = 20,
     ) -> None:
+        if (
+            isinstance(pasos_exploracion, bool)
+            or not isinstance(pasos_exploracion, int)
+            or pasos_exploracion < 1
+        ):
+            raise ValueError("pasos_exploracion debe ser un entero mayor o igual a 1.")
+
         self.env_id = env_id
         self.lr = lr
         self.gamma = gamma
@@ -108,124 +102,155 @@ class DQNAgent:
         self.buffer_capacity = buffer_capacity
         self.target_update_freq = target_update_freq
         self.hidden = hidden
+        self.pasos_exploracion = pasos_exploracion
         self.training_episodes = 0
+        self._reiniciar_exploracion()
 
-        env = gym.make(env_id)
-        self.state_dim = int(env.observation_space.shape[0])  # type: ignore[index]
-        self.action_dim = int(env.action_space.n)  # type: ignore[attr-defined]
-        env.close()
+        entorno = gym.make(env_id)
+        self.state_dim = int(entorno.observation_space.shape[0])
+        self.action_dim = int(entorno.action_space.n)
+        entorno.close()
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
         self.q_net = QNetwork(self.state_dim, self.action_dim, hidden).to(self.device)
-        self.target_net = QNetwork(self.state_dim, self.action_dim, hidden).to(self.device)
+        self.target_net = QNetwork(self.state_dim, self.action_dim, hidden).to(
+            self.device
+        )
         self.target_net.load_state_dict(self.q_net.state_dict())
 
         self.optimizer = optim.Adam(self.q_net.parameters(), lr=lr)
         self.loss_fn = nn.MSELoss()
         self.buffer = ReplayBuffer(buffer_capacity)
 
-    # ── policy ────────────────────────────────────────────────────────
+    def _reiniciar_exploracion(self) -> None:
+        """Evita que un episodio herede una acción pendiente del anterior."""
+        self._accion_exploratoria = 0
+        self._pasos_restantes = 0
 
     def select_action(self, state: np.ndarray, *, deterministic: bool = False) -> int:
+        """Elige una acción de la red o inicia un bloque de exploración."""
+        if not deterministic:
+            if self._pasos_restantes > 0:
+                self._pasos_restantes -= 1
+                return self._accion_exploratoria
 
-        if not deterministic and random.random() < self.epsilon:
-            return random.randrange(self.action_dim)
+            if random.random() < self.epsilon:
+                self._accion_exploratoria = random.randrange(self.action_dim)
+                # Este primer paso ya cuenta dentro del bloque.
+                self._pasos_restantes = self.pasos_exploracion - 1
+                return self._accion_exploratoria
+
+        # La evaluación ignora tanto epsilon como cualquier bloque pendiente.
         with torch.no_grad():
-            t = torch.as_tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
-            return int(self.q_net(t).argmax(dim=1).item())
+            estado = torch.as_tensor(
+                state, dtype=torch.float32, device=self.device
+            ).unsqueeze(0)
+            return int(self.q_net(estado).argmax(dim=1).item())
 
-    def predict(self, obs: np.ndarray, *, deterministic: bool = True) -> tuple[int, None]:
+    def predict(
+        self, obs: np.ndarray, *, deterministic: bool = True
+    ) -> tuple[int, None]:
         return self.select_action(obs, deterministic=deterministic), None
 
-    # ── learning step ─────────────────────────────────────────────────
-
-    def _tensor(self, x, dtype=torch.float32) -> torch.Tensor:
-        return torch.as_tensor(np.array(x), dtype=dtype, device=self.device)
+    def _tensor(self, valores, dtype=torch.float32) -> torch.Tensor:
+        return torch.as_tensor(np.array(valores), dtype=dtype, device=self.device)
 
     def _learn(self) -> float:
-        """Sample a mini-batch from the buffer and take one gradient step.
-
-        Returns the batch loss value.
-        """
+        """Actualiza la red principal a partir de un lote de experiencias."""
         if len(self.buffer) < self.batch_size:
             return 0.0
 
-        batch = self.buffer.sample(self.batch_size)
-        states, actions, rewards, next_states, terminateds = zip(*batch)
+        lote = self.buffer.sample(self.batch_size)
+        estados, acciones, recompensas, siguientes_estados, terminaciones = zip(*lote)
 
-        states_t = self._tensor(states)
-        actions_t = self._tensor(actions, torch.int64).unsqueeze(1)
-        rewards_t = self._tensor(rewards).unsqueeze(1)
-        next_states_t = self._tensor(next_states)
-        terminateds_t = self._tensor(terminateds).unsqueeze(1)
+        estados_t = self._tensor(estados)
+        acciones_t = self._tensor(acciones, torch.int64).unsqueeze(1)
+        recompensas_t = self._tensor(recompensas).unsqueeze(1)
+        siguientes_estados_t = self._tensor(siguientes_estados)
+        terminaciones_t = self._tensor(terminaciones).unsqueeze(1)
 
-        # EXERCISE 2b:the DQN learning step.
+        valores_actuales = self.q_net(estados_t)
+        q_actual = valores_actuales.gather(1, acciones_t)
 
-        # 1:  current_q
-        all_current_values = self.q_net(states_t)           
-        current_q = all_current_values.gather(1, actions_t) 
-
-        # 2-3. next_q - target_q
+        # La red objetivo aporta una referencia que no cambia en cada paso.
         with torch.no_grad():
-            all_next_values = self.target_net(next_states_t)          # forma (batch, 3)
-            next_q = all_next_values.max(dim=1, keepdim=True).values  # forma (batch, 1)
-            # si el episodio terminó de verdad (llegó a la bandera), el futuro vale 0
-            target_q = rewards_t + self.gamma * next_q * (1.0 - terminateds_t)
+            valores_siguientes = self.target_net(siguientes_estados_t)
+            q_siguiente = valores_siguientes.max(dim=1, keepdim=True).values
+            q_objetivo = recompensas_t + self.gamma * q_siguiente * (
+                1.0 - terminaciones_t
+            )
 
-        # Paso 4
-        loss = self.loss_fn(current_q, target_q)
-        self.optimizer.zero_grad()   # borrar los gradientes anteriores
-        loss.backward()              # calcular los gradientes nuevos
-        self.optimizer.step()        # mover los pesos de la red
+        perdida = self.loss_fn(q_actual, q_objetivo)
+        self.optimizer.zero_grad()
+        perdida.backward()
+        self.optimizer.step()
+        return perdida.item()
 
-        return loss.item()
+    def train(
+        self,
+        total_episodes: int = 500,
+        log_interval: int = 10,
+        *,
+        semilla: int | None = None,
+    ) -> list[float]:
+        """Entrena y devuelve la recompensa total de cada episodio.
 
-    # ── training loop ─────────────────────────────────────────────────
+        La semilla opcional controla las posiciones iniciales del entorno.
+        Para repetir un experimento también se deben fijar las semillas de
+        random, NumPy y PyTorch antes de crear el agente.
+        """
+        entorno = gym.make(self.env_id)
+        historial_recompensas: list[float] = []
 
-    def train(self, total_episodes: int = 500, log_interval: int = 10) -> list[float]:
-        env = gym.make(self.env_id)
-        rewards_history: list[float] = []
-
-        for episode in range(1, total_episodes + 1):
-            obs, _ = env.reset()
-            total_reward = 0.0
-            done = False
-
-            while not done:
-                action = self.select_action(obs)
-                next_obs, reward, terminated, truncated, _ = env.step(action)
-                done = terminated or truncated
-
-                # Store `terminated`, not `done`: hitting the 200-step time
-                # limit is not a real terminal state, so we must keep
-                # bootstrapping through it.
-                self.buffer.push(obs, action, float(reward), next_obs, terminated)
-                self._learn()
-
-                obs = next_obs
-                total_reward += reward
-
-            self.epsilon = max(self.epsilon_end, self.epsilon * self.epsilon_decay)
-            self.training_episodes += 1
-            rewards_history.append(total_reward)
-
-            if episode % self.target_update_freq == 0:
-                self.target_net.load_state_dict(self.q_net.state_dict())
-
-            if episode % log_interval == 0:
-                avg = np.mean(rewards_history[-log_interval:])
-                print(
-                    f"Episode {episode}/{total_episodes} | "
-                    f"Avg Reward: {avg:.2f} | "
-                    f"Epsilon: {self.epsilon:.4f} | "
-                    f"Buffer: {len(self.buffer)}"
+        try:
+            for episodio in range(1, total_episodes + 1):
+                semilla_episodio = (
+                    None if semilla is None else semilla + self.training_episodes
                 )
+                observacion, _ = entorno.reset(seed=semilla_episodio)
+                self._reiniciar_exploracion()
+                recompensa_total = 0.0
+                finalizado = False
 
-        env.close()
-        return rewards_history
+                while not finalizado:
+                    accion = self.select_action(observacion)
+                    siguiente_observacion, recompensa, terminado, truncado, _ = (
+                        entorno.step(accion)
+                    )
+                    finalizado = terminado or truncado
 
-    # ── persistence ───────────────────────────────────────────────────
+                    # Agotar el tiempo detiene el episodio, pero no elimina
+                    # el valor futuro del estado en la actualización de Bellman.
+                    self.buffer.push(
+                        observacion,
+                        accion,
+                        float(recompensa),
+                        siguiente_observacion,
+                        terminado,
+                    )
+                    self._learn()
+                    observacion = siguiente_observacion
+                    recompensa_total += float(recompensa)
+
+                self.epsilon = max(self.epsilon_end, self.epsilon * self.epsilon_decay)
+                self.training_episodes += 1
+                historial_recompensas.append(recompensa_total)
+
+                if self.training_episodes % self.target_update_freq == 0:
+                    self.target_net.load_state_dict(self.q_net.state_dict())
+
+                if episodio % log_interval == 0:
+                    promedio = np.mean(historial_recompensas[-log_interval:])
+                    print(
+                        f"Episodio {episodio}/{total_episodes} | "
+                        f"Recompensa media: {promedio:.2f} | "
+                        f"Epsilon: {self.epsilon:.4f} | "
+                        f"Experiencias: {len(self.buffer)}"
+                    )
+        finally:
+            entorno.close()
+
+        return historial_recompensas
 
     _HPARAMS = (
         "env_id",
@@ -237,43 +262,50 @@ class DQNAgent:
         "buffer_capacity",
         "target_update_freq",
         "hidden",
+        "pasos_exploracion",
     )
 
     def save(self, path: Path) -> None:
+        """Guarda los pesos, el optimizador y la configuración del agente."""
+        path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        data = {k: getattr(self, k) for k in self._HPARAMS}
-        data["q_net_state"] = self.q_net.state_dict()
-        data["optimizer_state"] = self.optimizer.state_dict()
-        data["epsilon"] = self.epsilon
-        data["training_episodes"] = self.training_episodes
-        torch.save(data, path)
-        print(f"Saved DQN agent to {path}")
+        datos = {clave: getattr(self, clave) for clave in self._HPARAMS}
+        datos["q_net_state"] = self.q_net.state_dict()
+        datos["optimizer_state"] = self.optimizer.state_dict()
+        datos["epsilon"] = self.epsilon
+        datos["training_episodes"] = self.training_episodes
+        torch.save(datos, path)
+        print(f"Agente DQN guardado en {path}")
 
     @classmethod
     def load(cls, path: Path) -> Self:
-        data = torch.load(path, weights_only=False)
-        agent = cls(
-            data["env_id"],
-            epsilon_start=data["epsilon"],
-            **{k: data[k] for k in cls._HPARAMS if k != "env_id"},
-        )
-        # The target net starts as a copy of the online net; it re-syncs during
-        # training anyway, so there is no need to persist it separately.
-        agent.q_net.load_state_dict(data["q_net_state"])
-        agent.target_net.load_state_dict(data["q_net_state"])
-        agent.optimizer.load_state_dict(data["optimizer_state"])
-        agent.training_episodes = data["training_episodes"]
-        return agent
+        """Carga también los modelos anteriores al cambio de exploración."""
+        datos = torch.load(path, map_location="cpu", weights_only=True)
+        configuracion = {
+            clave: datos[clave]
+            for clave in cls._HPARAMS
+            if clave != "env_id" and clave in datos
+        }
+        # Un modelo antiguo conserva la exploración independiente que usaba.
+        configuracion.setdefault("pasos_exploracion", 1)
+        agente = cls(datos["env_id"], epsilon_start=datos["epsilon"], **configuracion)
+        agente.q_net.load_state_dict(datos["q_net_state"])
+        agente.target_net.load_state_dict(datos["q_net_state"])
+        agente.optimizer.load_state_dict(datos["optimizer_state"])
+        agente.training_episodes = datos["training_episodes"]
+        return agente
 
     def info(self) -> str:
-        params = sum(p.numel() for p in self.q_net.parameters())
+        parametros = sum(parametro.numel() for parametro in self.q_net.parameters())
         return (
-            f"DQN agent for {self.env_id}\n"
-            f"  Episodes trained  : {self.training_episodes}\n"
-            f"  Network params    : {params:,}\n"
-            f"  Epsilon           : {self.epsilon:.4f}\n"
-            f"  LR / Gamma        : {self.lr} / {self.gamma}\n"
-            f"  Batch size        : {self.batch_size}\n"
-            f"  Target update     : every {self.target_update_freq} episodes\n"
-            f"  Device            : {self.device}"
+            f"Agente DQN para {self.env_id}\n"
+            f"  Episodios entrenados : {self.training_episodes}\n"
+            f"  Parámetros de la red : {parametros:,}\n"
+            f"  Epsilon              : {self.epsilon:.4f}\n"
+            f"  Tasa de aprendizaje  : {self.lr}\n"
+            f"  Factor de descuento  : {self.gamma}\n"
+            f"  Tamaño del lote      : {self.batch_size}\n"
+            f"  Actualización objetivo: cada {self.target_update_freq} episodios\n"
+            f"  Pasos de exploración : {self.pasos_exploracion}\n"
+            f"  Dispositivo          : {self.device}"
         )

@@ -1,0 +1,84 @@
+Experimento nuevo: se comienza con un agente sin entrenar.
+Agente DQN para MountainCar-v0
+  Episodios entrenados : 0
+  Parámetros de la red : 17,283
+  Epsilon              : 1.0000
+  Tasa de aprendizaje  : 0.001
+  Factor de descuento  : 0.99
+  Tamaño del lote      : 64
+  Actualización objetivo: cada 10 episodios
+  Pasos de exploración : 1
+  Dispositivo          : cpu
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.7783 | Experiencias: 10000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.6058 | Experiencias: 20000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.4715 | Experiencias: 30000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.3670 | Experiencias: 40000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.2856 | Experiencias: 50000
+Agente DQN guardado en evidencias\dqn\independiente_semilla42_2500\dqn_episodio_250.pt
+Total entrenado: 250/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.2223 | Experiencias: 60000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.1730 | Experiencias: 70000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.1347 | Experiencias: 80000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.1048 | Experiencias: 90000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0816 | Experiencias: 100000
+Total entrenado: 500/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0635 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0494 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0385 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0299 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0233 | Experiencias: 100000
+Total entrenado: 750/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0181 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0141 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0110 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 1000/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 1250/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 1500/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 1750/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 2000/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 2250/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Episodio 50/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 100/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 150/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 200/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Episodio 250/250 | Recompensa media: -200.00 | Epsilon: 0.0100 | Experiencias: 100000
+Total entrenado: 2500/2500 | Validación sin exploración: -200.00 | Llegadas: 0/20 | Mejor modelo: episodio 250
+Agente DQN guardado en evidencias\dqn\independiente_semilla42_2500\dqn_final.pt
+Episodios de entrenamiento: 2500
+Pasos por bloque exploratorio: 1
+Semilla del experimento: 42
+Evaluación sin exploración: 100 episodios
+Recompensa media: -200.00
+Desviación estándar: 0.00
+Llegadas a la bandera: 0/100
+Modelo seleccionado en validación: episodio 250
+La evaluación final utiliza semillas distintas de la validación.
+
+Evidencias guardadas en: C:\Users\camil\Documents\Codex\2026-09-17\me-sa\outputs\mountain_car_persona4\evidencias\dqn\independiente_semilla42_2500

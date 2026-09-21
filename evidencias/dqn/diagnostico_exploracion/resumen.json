@@ -1,0 +1,16 @@
+[
+  {
+    "pasos_bloque": 1,
+    "episodios": 300,
+    "exitos": 0,
+    "semilla": 42,
+    "aprendizaje": false
+  },
+  {
+    "pasos_bloque": 20,
+    "episodios": 300,
+    "exitos": 31,
+    "semilla": 42,
+    "aprendizaje": false
+  }
+]
