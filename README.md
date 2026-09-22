@@ -151,17 +151,18 @@ sostenidas de empuje y pueda escapar el valle — ver `EXERCISES.md`, Ejercicio 
 
 ## 3. Esquemas del proceso de entrenamiento
 
-*(Persona 5 completa esta sección — dibujos propios, no generados por IA)*
+### Q-Learning — tabla Q
 
-### Q-Learning
+El esquema muestra cómo el agente observa el estado, selecciona una acción, recibe una recompensa y actualiza el valor correspondiente en la tabla Q, la exploración permite probar otras acciones y descubrir mejores estrategias.
 
-![Esquema Q-Learning](evidencias/esquemas/qlearning.jpg)
-*(reemplazar por la imagen escaneada)*
+![Esquema de Q-Learning](evidencias/esquemas/qlearning.png)
 
-### DQN
+### DQN — redes y memoria
 
-![Esquema DQN](evidencias/esquemas/dqn.jpg)
-*(reemplazar por la imagen escaneada)*
+El esquema muestra la red principal, la memoria de experiencias, la red objetivo y la actualización de Bellman. La memoria permite reutilizar experiencias y seleccionar muestras al azar para entrenar, la red objetivo proporciona una referencia más estable para calcular los valores que la red principal aprende a estimar.
+
+![Esquema de DQN](evidencias/esquemas/dqn.png)
+
 
 ## 4. Comparación entre Q-Learning y DQN
 
